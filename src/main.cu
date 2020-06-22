@@ -241,7 +241,7 @@ void vegetationKernel(float *in, float *out, int row, int col, int channel){
     int i = threadIdx.x + blockDim.x * blockIdx.x;
     int j = threadIdx.y + blockDim.y * blockIdx.y;
 
-    if (i < col && j < row) {
+    if (i < row && j < col) {
         float a = (in[offset3D(i, j, 2, col, channel)] - in[offset3D(i, j, 1, col, channel)] ) ;
         float b = (in[offset3D(i, j, 2, col, channel)] + in[offset3D(i, j, 1, col, channel)] ) ;
 
@@ -260,7 +260,7 @@ void detectionKernel(float *in, int8_t *out, int row, int col){
     int i = threadIdx.x + blockDim.x * blockIdx.x;
     int j = threadIdx.y + blockDim.y * blockIdx.y;
 
-    if (i < col && j < row) {
+    if (i < row && j < col) {
         out[offset2D(i, j, col)] = in[offset2D(i, j, col)] > 0.1 ? 1 : 0;
     } 
 }
