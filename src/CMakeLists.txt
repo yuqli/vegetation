@@ -6,7 +6,12 @@ set(CMAKE_CXX_STANDARD 11)
 # find_package(TIFF)
 # include_directories( ${TIFF_INCLUDE_DIRS})
 
-# add_executable(main main.cpp)
-add_executable(main main.cu)
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+
+
+add_executable(main main.cpp)
+# add_executable(main main.cu)
 # target_link_libraries( main ${TIFF_LIBRARIES})
+target_link_libraries( main ${OpenCV_LIBS})
 
