@@ -1,3 +1,12 @@
+# How to use
+1. Put sample file under root folder, i.e. outside `src` folder. Sample file name: "S2A_3Band_Cropped.tif"
+2. Run `run.sh` in `src` folder. It does four steps : 1) read `.tif` file in Python and save as `.txt` 2) compile and build c++ executable `main` and 3) run `main`
+
+This software depends on :
+1) scikit-image in Python
+2) OpenCV in C++
+3) CUDA
+
 # Resuls
 
 - Performs one run only for each funtion. 
