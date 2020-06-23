@@ -3,6 +3,11 @@
 #include <opencv2/core.hpp>
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
+#include <fstream>
+#include <string>
+#include <chrono>
+
+
 
 using namespace cv;
 
@@ -195,9 +200,8 @@ int main()
     std::cout << "width " << width << " height " << height << std::endl;
 
     // Read from tmp .txt file
-
     int img_size = width * height * channel;
-    float dat[img_size];
+    float *dat = new float[img_size]();
 
     std::ifstream file("../tmp.txt");
     std::string str; 
@@ -211,41 +215,88 @@ int main()
         }
     }
 
-    // verify correct
+    // // verify correct
 
-    for (int i = 0; i < 1; i++) {
-        for (int j = 0; j < 1; j++) {
-            for (int k = 0; k < channel; k++) {
-                std::cout << dat[offset3D(i, j, k, width, channel)] << " ";
-            }
-        }
-    }
+    // for (int i = 0; i < 1; i++) {
+    //     for (int j = 0; j < 1; j++) {
+    //         for (int k = 0; k < channel; k++) {
+    //             std::cout << dat[offset3D(i, j, k, width, channel)] << " ";
+    //         }
+    //     }
+    // }
 
 
     // C++ version
     int out_size = height * width;
-    float veg_cpp[out_size];
-    int8_t det_cpp[out_size];
+
+    std::cout << "C++ ======================================\n";
+    float *veg_cpp = new float[out_size]();
+    int8_t *det_cpp = new int8_t[out_size]();
     
+    // time veg in cpp
+    auto t1 = std::chrono::high_resolution_clock::now();
+
     getVegetationIndex(dat, veg_cpp, height, width, channel);
+
+    auto t2 = std::chrono::high_resolution_clock::now();
+
+    auto veg_cpp_duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+
+    // time det in cpp
+    t1 = std::chrono::high_resolution_clock::now();
 
     getVegetationDetection(veg_cpp, det_cpp, height, width);
 
-    // printImg(veg_cpp, height, width);
-    // std::cout << "Now results for detec " << std::endl;
-    // printImg(det_cpp, height, width);
+    t2 = std::chrono::high_resolution_clock::now();
+
+    auto det_cpp_duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+
+    // verify results in cpp
+    std::cout << "Veg time : cpp " << veg_cpp_duration << std::endl;
+    std::cout << "Det time : cpp " << det_cpp_duration << std::endl;
+
+    std::cout << "Veg results : cpp " << std::endl;
+    printImg(veg_cpp, 5, 5);
+    std::cout << "Det results : cpp " << std::endl;
+    printImg(det_cpp, 5, 5);
 
     // CUDA version
-    float veg_cuda[out_size];
-    int8_t det_cuda[out_size];
+    std::cout << "CUDA ======================================\n";
+
+    float *veg_cuda = new float[out_size]();
+    int8_t *det_cuda = new int8_t[out_size]();
+
+    // time veg in cuda 
+    t1 = std::chrono::high_resolution_clock::now();
 
     getVegetationIndexCUDA(dat, veg_cuda, height, width, channel);
 
+    t2 = std::chrono::high_resolution_clock::now();
+
+    auto veg_cuda_duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+
+    // time det in cuda 
+    t1 = std::chrono::high_resolution_clock::now();
+
     getVegetationDetectionCUDA(veg_cuda, det_cuda, height, width);
 
-    printImg(veg_cuda, height, width);
-    std::cout << "Now results for detect " << std::endl;
-    printImg(det_cuda, height, width);
+    t2 = std::chrono::high_resolution_clock::now();
+
+    auto det_cuda_duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+
+    // verify results in cuda 
+    std::cout << "Veg time : cuda " << veg_cuda_duration << std::endl;
+    std::cout << "Det time : cuda " << det_cuda_duration << std::endl;
+
+    std::cout << "Veg results : cuda" << std::endl;
+    printImg(veg_cuda, 5, 5);
+    std::cout << "Det results : cuda" << std::endl;
+    printImg(det_cuda, 5, 5);
+
+    // save results
+    std::cout << "Write results to image ...\n";
+    cv::imwrite("../veg_index.bmp",  cv::Mat(height, width, CV_32FC1, veg_cpp));
+    cv::imwrite("../veg_detection.tif",  cv::Mat(height, width, CV_8UC1, det_cpp));
 
     return 0; 
 } 

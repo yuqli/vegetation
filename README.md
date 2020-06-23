@@ -1,3 +1,14 @@
+# Resuls
+
+- Performs one run only for each funtion. 
+- Time unit: microseconds
+
+Note it's better to perform multiple runs and get average run time for each function when time permitted.
+
+|      | Vegetation | Detection | Speed up |
+| ---- | ---------- | --------- | -------- |
+| C++  | 187130     | 97878     | 47.70%   |
+| CUDA | 138634     | 26794     | 80.67%   |
 
 
 ## Read .tiff issues
@@ -44,5 +55,16 @@ Due to time constraint, I decide to move to a hybrid approach : use Python to pa
 - [ ] Convert 16-bit .tiff to 16-bit .png in Python, or use other image processing softwares like Imagemagick. 
 
 These two approaches have been used by people in the aforementioned questions to solve this I/O issue.
+
+## Save .tiff issues
+Similar to read 32-bit .tiff issues above, it's also tricky to save 32-bit .tiff in OpenCV. e.g. 
+
+- https://stackoverflow.com/questions/17735863/opencv-save-cv-32fc1-images
+- https://www.researchgate.net/post/how_to_save_an_image_of_type_float32_in_opencv
+- https://answers.opencv.org/question/67165/save-floating-point-tiff-images/
+- https://stackoverflow.com/questions/23019021/opencv-how-to-save-float-array-as-an-image
+- https://stackoverflow.com/questions/23663180/how-can-i-write-float-image-in-opencv
+
+The temporary solution is to save as .bmp files for float32. Save as .png for int8.
 
 
