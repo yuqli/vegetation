@@ -15,10 +15,10 @@ This software depends on :
 
 Note it's better to perform multiple runs and get average run time for each function when time permitted.
 
-|      | Vegetation | Detection | Speed up |
-| ---- | ---------- | --------- | -------- |
-| C++  | 187130     | 97878     | 47.70%   |
-| CUDA | 138634     | 26794     | 80.67%   |
+|            |   C++  | CUDA  | Speed up |
+| ---------- | ------ | ----- | -------- |
+| Vegetation | 187130 | 97878 | 47.70%   |
+| Detection  | 138634 | 26794 | 80.67%   |
 
 
 ## Read .tiff issues
