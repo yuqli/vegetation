@@ -40,8 +40,8 @@ Due to time constraint, I decide to move to a hybrid approach : use Python to pa
 
 ### Recommendations: 
 
--[ ] USe geo-specific C++ libraries like GDAL : https://gdal.org/. 
--[ ] Convert 16-bit .tiff to 16-bit .png in Python, or use other image processing softwares like Imagemagick. 
+- [ ] Use geo-specific C++ image libraries like GDAL : https://gdal.org/. 
+- [ ] Convert 16-bit .tiff to 16-bit .png in Python, or use other image processing softwares like Imagemagick. 
 
 These two approaches have been used by people in the aforementioned questions to solve this I/O issue.
 
