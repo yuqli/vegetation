@@ -1,64 +1,64 @@
-
+#include "tiffio.h"
 #include <iostream>
 #include <vector>
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
-#include "opencv2/imgproc.hpp"
 
 using namespace std;
+using namespace cv;
 
-
-Mat test1(1000, 1000, CV_16U, Scalar(400));
-imwrite("test.tiff", test1);
-Mat test2 = imread("stam.tiff", CV_LOAD_IMAGE_ANYDEPTH);
-cout << test1.depth() << " " << test2.depth() << endl;
-cout << test2.at<unsigned short>(0,0) << endl;
 
 int main() 
 { 
+    
+    /*
+    Mat mat = imread("../S2A_3Band_Cropped_int16_b1.tif", IMREAD_ANYDEPTH);  
+    // Mat mat = imread("../dat.tif", IMREAD_ANYDEPTH | IMREAD_COLOR);  
+    // Mat mat = imread("../samples/test.tif", IMREAD_COLOR | IMREAD_ANYDEPTH);  
+    int rows = mat.rows;
+    int cols = mat.cols;
+    std::cout << "rows " << rows << " cols " << cols << " channels " << mat.channels() << std::endl;
 
-    TIFF *tif=TIFFOpen("../dat.tif", "r");
-
-    if (tif) {
-        int width, height;
-        int channels = 3;
-
-        // #define uint32 unsigned long
-
-        TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &width);           // uint32 width;
-        TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &height);        // uint32 height;
-
-        std::cout << "width " << width << " height " << height << std::endl;
-
-
-
-
-        int npixels = width * height * channels;
-
-        auto raster=(uint32*) _TIFFmalloc(npixels *sizeof(uint32));
-
-        int x = TIFFReadRGBAImage(tif, width, height, raster, 0);
-        std::cout << x << endl;
-
-        // char X=(char )TIFFGetX(raster[i]);  // where X can be the channels R, G, B, and A.
-
-        // for (int k = 0; k < channels; k++) {
-        //     std::cout << tif
-        // }
-
-        _TIFFfree(raster);
-
-        TIFFClose(tif);
-
+    if(! mat.data )                              // Check for invalid input
+    {
+        cout <<  "Could not open or find the image" << std::endl ;
+        return -1;
     }
 
+    // namedWindow( "Display window", WINDOW_AUTOSIZE );// Create a window for display.
+    // imshow( "Display window", mat);                   // Show our image inside it.
+    // waitKey(0);  
+
+    // std::cout << mat.at<cv::Vec3i>(0, 0).val[0] << endl;
+    std::cout << mat.at<int>(0, 0) << endl;
+    */
 
 
+    TIFF* tif = TIFFOpen("../dat.tif", "r");
+    if (tif) {
+        uint32 w, h;
+        size_t npixels;
+        uint32* raster;
 
-    // write to tiff
-      
+        TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
+        TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
+
+        std::cout << "w " << w << " h " << h << std::endl;
+
+        npixels = w * h;
+        raster = (uint32*) _TIFFmalloc(npixels * sizeof (uint32));
+
+        if (raster != NULL) {
+            if (TIFFReadRGBAImage(tif, w, h, raster, 0)) {
+            // ...process raster data...
+            }
+            _TIFFfree(raster);
+        }
+        TIFFClose(tif);
+    }
+
     return 0; 
 } 
 

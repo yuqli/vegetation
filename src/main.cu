@@ -1,5 +1,10 @@
 #include <iostream>
 #include <cuda.h>
+#include <opencv2/core.hpp>
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui.hpp"
+
+using namespace cv;
 
 __global__ 
 void vegetationKernel(float *in, float *out, int row, int col, int channel);
@@ -189,18 +194,24 @@ int main()
     std::cout << "width " << width << " height " << height << std::endl;
 
     // create a test image
-    int img_size = width * height * channel;
-    float dat[img_size];
 
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            dat[offset3D(i, j, 0, width, channel)] = 0.0; 
-            dat[offset3D(i, j, 1, width, channel)] = 1.0; 
-            dat[offset3D(i, j, 2, width, channel)] = 3.0; 
-        }
-    }
+    // int img_size = width * height * channel;
+    // float dat[img_size];
+
+    // for (int i = 0; i < height; i++) {
+    //     for (int j = 0; j < width; j++) {
+    //         dat[offset3D(i, j, 0, width, channel)] = 0.0; 
+    //         dat[offset3D(i, j, 1, width, channel)] = 1.0; 
+    //         dat[offset3D(i, j, 2, width, channel)] = 3.0; 
+    //     }
+    // }
 
     // printCube(dat, height, width);
+
+
+
+    Mat mat = imread("../samples/test.tif", IMREAD_ANYCOLOR | IMREAD_ANYDEPTH);  
+
 
     // C++ version
     int out_size = height * width;
