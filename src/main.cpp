@@ -1,13 +1,15 @@
 #include "tiffio.h"
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include <string>
 
-#include <opencv2/core.hpp>
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
+// #include <opencv2/core.hpp>
+// #include "opencv2/imgcodecs.hpp"
+// #include "opencv2/highgui.hpp"
 
 using namespace std;
-using namespace cv;
+// using namespace cv;
 
 
 int main() 
@@ -36,6 +38,7 @@ int main()
     */
 
 
+    /*
     TIFF* tif = TIFFOpen("../dat.tif", "r");
     if (tif) {
         uint32 w, h;
@@ -57,6 +60,20 @@ int main()
             _TIFFfree(raster);
         }
         TIFFClose(tif);
+    }
+    */
+
+
+    std::ifstream file("../tmp.txt");
+    std::string str; 
+    int counter = 0;
+    while (std::getline(file, str))
+    {
+        if (counter >= 6) {
+            break;
+        }
+        std::cout << std::atof(str.c_str()) << std::endl;
+        counter++;
     }
 
     return 0; 

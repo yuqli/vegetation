@@ -187,30 +187,39 @@ void printCube(float *d, int row, int col) {
 
 int main() 
 { 
-    int height = 5;
-    int width = 4; 
+    // Image metadata is hard coded for now, but can be passed as arguments to main
+    int height = 6058;
+    int width = 3320; 
     int channel= 3;
 
     std::cout << "width " << width << " height " << height << std::endl;
 
-    // create a test image
+    // Read from tmp .txt file
 
-    // int img_size = width * height * channel;
-    // float dat[img_size];
+    int img_size = width * height * channel;
+    float dat[img_size];
 
-    // for (int i = 0; i < height; i++) {
-    //     for (int j = 0; j < width; j++) {
-    //         dat[offset3D(i, j, 0, width, channel)] = 0.0; 
-    //         dat[offset3D(i, j, 1, width, channel)] = 1.0; 
-    //         dat[offset3D(i, j, 2, width, channel)] = 3.0; 
-    //     }
-    // }
+    std::ifstream file("../tmp.txt");
+    std::string str; 
 
-    // printCube(dat, height, width);
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            for (int k = 0; k < channel; k++) {
+                std::getline(file, str);
+                dat[offset3D(i, j, k, width, channel)] = std::atof(str.c_str());
+            }
+        }
+    }
 
+    // verify correct
 
-
-    Mat mat = imread("../samples/test.tif", IMREAD_ANYCOLOR | IMREAD_ANYDEPTH);  
+    for (int i = 0; i < 1; i++) {
+        for (int j = 0; j < 1; j++) {
+            for (int k = 0; k < channel; k++) {
+                std::cout << dat[offset3D(i, j, k, width, channel)] << " ";
+            }
+        }
+    }
 
 
     // C++ version
